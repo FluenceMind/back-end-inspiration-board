@@ -17,6 +17,7 @@ class Card(db.Model):
             "likes_count": self.likes_count,
             "board_id": self.board_id,
         }
+        return result
         
     @classmethod
     def from_dict(cls, card_data):
