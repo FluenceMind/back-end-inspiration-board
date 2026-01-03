@@ -14,11 +14,8 @@ def validate_model(cls, model_id):
     return model
 
 #Create model
-def create_model(cls, model_data):
-    try:
-        new_model = cls.from_dict(model_data)
-    except KeyError as e:
-        return abort(make_response({"details":f"Missing required field: {e.args[0]}"}, 400))
+def create_model(ModelClass, model_data):
+    new_model = ModelClass.from_dict(model_data)
     db.session.add(new_model)
     db.session.commit()
     return new_model.to_dict(), 201
