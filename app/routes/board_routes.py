@@ -2,6 +2,7 @@ from flask import Blueprint, request, Response
 from app.models.board import Board
 from .routes_utilities import get_models_with_filters, validate_model, create_model
 from ..db import db
+from app.models.card import Card
 
 bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -31,7 +32,25 @@ def create_board():
     request_body = request.get_json()
     return create_model(Board, request_body)
 
+#POST /boards/<board_id>/cards
+@bp.post("/<int:board_id>/cards")
+def create_card_for_board(board_id):
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
 
+    card_ids = request_body["card_ids"]
+
+    for card_id in card_ids:
+        card = validate_model(Card, card_id)
+        board.cards.append(card)
+    db.session.commit()
+
+    response = {
+        "id": board.id,
+        "card_ids": card_ids,
+    }
+    return response
+    
 #DELETE /boards/<board_id>
 @bp.delete("/<int:board_id>")
 def delete_board(board_id):

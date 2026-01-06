@@ -28,4 +28,3 @@ class Card(db.Model):
         board_id=card_data["board_id"]
     )
 
-
